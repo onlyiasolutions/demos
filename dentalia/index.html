@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DENTAL-IA | Tu clínica dental inteligente</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+font-family: 'Inter', sans-serif;
+}
+.hero-section {
+background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://readdy.ai/api/search-image?query=A%20modern%2C%20bright%20dental%20clinic%20waiting%20area%20with%20comfortable%20seating%2C%20clean%20minimalist%20design%2C%20soft%20lighting%2C%20plants%2C%20and%20a%20reception%20desk.%20The%20space%20looks%20professional%2C%20calming%2C%20and%20inviting%20with%20light%20blue%20and%20white%20color%20scheme&width=1920&height=1080&seq=dental-clinic-waiting-area&orientation=landscape');
+background-size: cover;
+background-position: center;
+}
+.service-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+.date-picker::-webkit-calendar-picker-indicator {
+filter: invert(0.5);
+}
+input:focus, select:focus, textarea:focus {
+outline: none;
+border-color: #4F46E5;
+box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+.custom-checkbox {
+position: relative;
+padding-left: 30px;
+cursor: pointer;
+}
+.custom-checkbox input {
+position: absolute;
+opacity: 0;
+cursor: pointer;
+}
+.checkmark {
+position: absolute;
+top: 0;
+left: 0;
+height: 20px;
+width: 20px;
+background-color: #fff;
+border: 2px solid #d1d5db;
+border-radius: 4px;
+}
+.custom-checkbox:hover input ~ .checkmark {
+border-color: #4F46E5;
+}
+.custom-checkbox input:checked ~ .checkmark {
+background-color: #4F46E5;
+border-color: #4F46E5;
+}
+.checkmark:after {
+content: "";
+position: absolute;
+display: none;
+}
+.custom-checkbox input:checked ~ .checkmark:after {
+display: block;
+}
+.custom-checkbox .checkmark:after {
+left: 6px;
+top: 2px;
+width: 5px;
+height: 10px;
+border: solid white;
+border-width: 0 2px 2px 0;
+transform: rotate(45deg);
+}
+.typing-animation::after {
+content: '|';
+animation: blink 1s infinite;
+}
+@keyframes blink {
+0%, 100% { opacity: 1; }
+50% { opacity: 0; }
+}
+.chat-message {
+opacity: 0;
+transform: translateY(20px);
+animation: fadeIn 0.5s forwards;
+}
+@keyframes fadeIn {
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+.custom-select {
+position: relative;
+}
+.select-selected {
+background-color: white;
+}
+.select-items {
+position: absolute;
+background-color: white;
+top: 100%;
+left: 0;
+right: 0;
+z-index: 99;
+max-height: 200px;
+overflow-y: auto;
+border-radius: 0 0 8px 8px;
+box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+.select-hide {
+display: none;
+}
+.select-items div {
+padding: 10px 16px;
+cursor: pointer;
+}
+.select-items div:hover {
+background-color: #f3f4f6;
+}
+.same-as-selected {
+background-color: #e5e7eb;
+}
+</style>
+</head>
+<body class="bg-gray-50">
+<!-- Header -->
+<header class="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
+<div class="container mx-auto px-4 py-3 flex justify-between items-center">
+<a href="#top" class="text-2xl font-['Pacifico'] text-primary">DENTAL-IA</a>
+<nav class="hidden md:flex space-x-8">
+<a href="#top" class="font-medium text-gray-700 hover:text-primary transition-colors">Inicio</a>
+<a href="#servicios" class="font-medium text-gray-700 hover:text-primary transition-colors">Servicios</a>
+<a href="#presupuesto" class="font-medium text-gray-700 hover:text-primary transition-colors">Presupuesto</a>
+</nav>
+<button class="md:hidden w-10 h-10 flex items-center justify-center text-gray-700">
+<i class="ri-menu-line ri-2x"></i>
+</button>
+</div>
+</header>
+<!-- Mobile Menu -->
+<div id="mobile-menu" class="fixed inset-0 bg-white z-40 hidden flex-col pt-20 px-4">
+<a href="#" class="py-4 border-b border-gray-100 font-medium text-gray-700">Inicio</a>
+<a href="#servicios" class="py-4 border-b border-gray-100 font-medium text-gray-700">Servicios</a>
+<a href="#presupuesto" class="py-4 border-b border-gray-100 font-medium text-gray-700">Presupuesto</a>
+</div>
+<!-- Hero Section -->
+<section class="hero-section min-h-[80vh] md:min-h-screen flex items-center justify-center pt-16 px-4 md:px-0">
+<div class="container mx-auto text-center text-white">
+<h1 class="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 leading-tight">Bienvenido a DENTAL-IA</h1>
+<p class="text-lg sm:text-xl md:text-2xl mb-6 md:mb-8">Conviértete en una clínica dental inteligente</p>
+<p class="max-w-2xl mx-auto mb-6 md:mb-8 text-base md:text-lg px-4 md:px-0">Impulsamos tu clínica dental con Inteligencia Artificial para generar presupuestos al instante y diseñar planes de tratamiento personalizados. Acelera tu flujo de trabajo, mejora la precisión diagnóstica y ofrece a tus pacientes una experiencia más ágil y segura.</p>
+<a href="#presupuesto" class="bg-primary hover:bg-primary/90 text-white font-medium py-2.5 md:py-3 px-6 md:px-8 !rounded-button inline-block transition-all whitespace-nowrap text-base md:text-lg">Probar presupuesto</a>
+</div>
+</section>
+<!-- Servicios Section -->
+<section id="servicios" class="py-12 md:py-20 bg-white">
+<div class="container mx-auto px-4">
+<h2 class="text-2xl md:text-4xl font-bold text-center mb-8 md:mb-12">Nuestros Servicios</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+<!-- Agente de Presupuestos -->
+<div class="service-card bg-white rounded-lg shadow-lg p-6 md:p-8 transition-all duration-300">
+<div class="w-14 h-14 md:w-16 md:h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4 md:mb-6 mx-auto">
+<i class="ri-calculator-line ri-xl md:ri-2x text-primary"></i>
+</div>
+<h3 class="text-lg md:text-xl font-semibold text-center mb-3 md:mb-4">Consultoría en Implementación de IA</h3>
+<p class="text-sm md:text-base text-gray-600 text-center">Estudio detallado de las posibilidades de implementación de inteligencia artificial en tu empresa. Analizamos procesos, herramientas actuales y proponemos una hoja de ruta personalizada para automatizar y optimizar resultados.</p>
+</div>
+<!-- Captación de Clientes con IA -->
+<div class="service-card bg-white rounded-lg shadow-lg p-6 md:p-8 transition-all duration-300">
+<div class="w-14 h-14 md:w-16 md:h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4 md:mb-6 mx-auto">
+<i class="ri-rocket-line ri-xl md:ri-2x text-primary"></i>
+</div>
+<h3 class="text-lg md:text-xl font-semibold text-center mb-3 md:mb-4">Captación de Clientes con IA </h3>
+<p class="text-sm md:text-base text-gray-600 text-center">Sistema completo de captación de leads mediante inteligencia artificial. Incluye anuncios, funnels automatizados, seguimiento, retargeting y cierre asistido. Pensado para negocios que quieren escalar ventas sin depender del esfuerzo humano constante.</p>
+</div>
+<!-- CRM Automatizado -->
+<div class="service-card bg-white rounded-lg shadow-lg p-6 md:p-8 transition-all duration-300">
+<div class="w-14 h-14 md:w-16 md:h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4 md:mb-6 mx-auto">
+<i class="ri-customer-service-2-line ri-xl md:ri-2x text-primary"></i>
+</div>
+<h3 class="text-lg md:text-xl font-semibold text-center mb-3 md:mb-4">CRM Automatizado</h3>
+<p class="text-sm md:text-base text-gray-600 text-center">Creamos un CRM personalizado que funciona en automático: seguimiento de leads, respuestas inteligentes, segmentación de audiencias, y más. Ideal para escalar tu negocio sin aumentar tu equipo.</p>
+</div>
+<!-- Agentes de IA Personalizados -->
+<div class="service-card bg-white rounded-lg shadow-lg p-6 md:p-8 transition-all duration-300">
+<div class="w-14 h-14 md:w-16 md:h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4 md:mb-6 mx-auto">
+<i class="ri-robot-line ri-xl md:ri-2x text-primary"></i>
+</div>
+<h3 class="text-lg md:text-xl font-semibold text-center mb-3 md:mb-4">Agentes de IA Personalizados</h3>
+<p class="text-sm md:text-base text-gray-600 text-center">Creamos agentes de inteligencia artificial entrenados para: atención al cliente 24/7, automatización de tareas internas, gestión de reservas, agendas o incidencias, e integración con WhatsApp, web, email y CRM.</p>
+</div>
+</div>
+<div class="bg-primary/5 rounded-xl p-6 md:p-8 mt-12">
+<div class="flex flex-col md:flex-row items-center gap-8">
+<div class="w-full md:w-1/2">
+<div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6 mx-auto md:mx-0">
+<i class="ri-robot-line ri-2x text-primary"></i>
+</div>
+<h3 class="text-2xl font-bold text-gray-900 mb-4 text-center md:text-left">Agente de Presupuestos IA</h3>
+<ul class="space-y-3 text-gray-700">
+<li class="flex items-start">
+<div class="w-5 h-5 mt-1 flex-shrink-0 flex items-center justify-center mr-3 text-primary">
+<i class="ri-check-line"></i>
+</div>
+<span>Presupuestos instantáneos y personalizados basados en tus necesidades específicas</span>
+</li>
+<li class="flex items-start">
+<div class="w-5 h-5 mt-1 flex-shrink-0 flex items-center justify-center mr-3 text-primary">
+<i class="ri-check-line"></i>
+</div>
+<span>Análisis detallado de opciones de tratamiento y costes asociados</span>
+</li>
+<li class="flex items-start">
+<div class="w-5 h-5 mt-1 flex-shrink-0 flex items-center justify-center mr-3 text-primary">
+<i class="ri-check-line"></i>
+</div>
+<span>Disponible 24/7 para consultas y estimaciones</span>
+</li>
+<li class="flex items-start">
+<div class="w-5 h-5 mt-1 flex-shrink-0 flex items-center justify-center mr-3 text-primary">
+<i class="ri-check-line"></i>
+</div>
+<span>Integración con sistema de citas y seguimiento de tratamientos</span>
+</li>
+</ul>
+<div class="mt-6 text-center md:text-left">
+<a href="#presupuesto" class="bg-primary hover:bg-primary/90 text-white font-medium py-2.5 px-6 !rounded-button inline-block transition-all whitespace-nowrap">Probar ahora</a>
+</div>
+</div>
+<div class="w-full md:w-1/2">
+<img src="https://readdy.ai/api/search-image?query=A%20modern%20dental%20clinic%20consultation%20room%20with%20advanced%20technology%20equipment%2C%20showing%20a%20digital%20screen%20with%20AI-powered%20dental%20treatment%20planning%20software.%20The%20room%20has%20clean%2C%20minimalist%20design%20with%20blue%20and%20white%20color%20scheme%2C%20creating%20a%20professional%20and%20high-tech%20atmosphere&width=600&height=400&seq=dental-ai-consultation&orientation=landscape" alt="Agente de Presupuestos IA" class="rounded-lg shadow-lg w-full h-auto object-cover">
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Presupuesto Section -->
+<section id="presupuesto" class="py-12 md:py-20 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <h2 class="text-2xl md:text-4xl font-bold text-center mb-3 md:mb-4">Prueba nuestro Agente de Presupuestos</h2>
+    <p class="text-base md:text-lg text-gray-600 text-center max-w-3xl mx-auto mb-8 md:mb-12">
+      Nuestro sistema de Inteligencia Artificial analizará tus necesidades y te proporcionará un presupuesto aproximado en segundos. Pruébalo con tus datos de contacto reales para recibir tu presupuesto personalizado en tu correo electrónico
+    </p>
+
+    <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-4 md:p-8">
+      <form id="presupuesto-dentalia-form" action="https://hook.eu2.make.com/xe9a3zmlt2hbo8pinekw7dtm9vmkgohc" method="POST">
+
+        <!-- Nombre -->
+        <div>
+          <label for="nombre" class="block text-sm font-medium text-gray-700 mb-1">Nombre <span class="text-red-500">*</span></label>
+          <input type="text" id="nombre" name="nombre" required class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-primary" placeholder="Ej. María">
+        </div>
+
+        <!-- Apellidos -->
+        <div>
+          <label for="apellidos" class="block text-sm font-medium text-gray-700 mb-1">Apellidos <span class="text-red-500">*</span></label>
+          <input type="text" id="apellidos" name="apellidos" required class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-primary" placeholder="Ej. García López">
+        </div>
+
+        <!-- Correo -->
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico <span class="text-red-500">*</span></label>
+          <input type="email" id="email" name="email" required class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-primary" placeholder="ejemplo@correo.com">
+        </div>
+
+        <!-- Teléfono -->
+        <div>
+          <label for="telefono" class="block text-sm font-medium text-gray-700 mb-1">Teléfono <span class="text-red-500">*</span></label>
+          <input type="tel" id="telefono" name="telefono" required class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-primary" placeholder="Ej. 612 345 678">
+        </div>
+
+        <!-- Necesidad dental -->
+        <div>
+          <label for="necesidad" class="block text-sm font-medium text-gray-700 mb-1">¿Cuál es tu principal necesidad dental ahora mismo?</label>
+          <select id="necesidad" name="necesidad" required class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-primary">
+            <option value="" disabled selected>Selecciona una opción</option>
+            <option>Quiero mejorar la estética de mi sonrisa</option>
+            <option>Tengo dolor o molestias</option>
+            <option>Necesito una revisión general</option>
+            <option>Necesito un tratamiento específico</option>
+            <option>Quiero consultar precios</option>
+            <option>Otro motivo</option>
+          </select>
+        </div>
+
+        <!-- Última visita -->
+        <div>
+          <label for="ultima_visita" class="block text-sm font-medium text-gray-700 mb-1">¿Has visitado recientemente a un dentista?</label>
+          <select id="ultima_visita" name="ultima_visita" required class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-primary">
+            <option value="" disabled selected>Selecciona una opción</option>
+            <option>Sí, en los últimos 6 meses</option>
+            <option>Sí, hace más de 6 meses</option>
+            <option>No, hace mucho tiempo</option>
+            <option>Nunca</option>
+          </select>
+        </div>
+
+        <!-- Urgencia -->
+        <div>
+          <label for="urgencia" class="block text-sm font-medium text-gray-700 mb-1">¿Cuál es tu nivel de urgencia?</label>
+          <select id="urgencia" name="urgencia" required class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-primary">
+            <option value="" disabled selected>Selecciona una opción</option>
+            <option>Lo antes posible</option>
+            <option>En las próximas semanas</option>
+            <option>Solo estoy informándome por ahora</option>
+          </select>
+        </div>
+
+        <!-- Detalles del presupuesto -->
+        <div>
+          <label for="detalles" class="block text-sm font-medium text-gray-700 mb-1">¿Qué te gustaría saber con más detalle en el presupuesto?</label>
+          <select id="detalles" name="detalles" required class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-primary">
+            <option value="" disabled selected>Selecciona una opción</option>
+            <option>Precio total estimado</option>
+            <option>Posibilidades de financiación</option>
+            <option>Tiempo estimado de tratamiento</option>
+            <option>Opciones de estética dental</option>
+            <option>Opciones sin dolor / anestesia</option>
+            <option>Todo lo anterior</option>
+          </select>
+        </div>
+
+        <!-- Seguro dental -->
+        <div>
+          <label for="seguro_dental" class="block text-sm font-medium text-gray-700 mb-1">¿Tienes seguro dental?</label>
+          <select id="seguro_dental" name="seguro_dental" required class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-primary">
+            <option value="" disabled selected>Selecciona una opción</option>
+            <option>Sí</option>
+            <option>No</option>
+            <option>No lo sé</option>
+          </select>
+        </div>
+
+        <!-- Comentarios -->
+        <div>
+          <label for="comentarios" class="block text-sm font-medium text-gray-700 mb-1">¿Algo más que quieras comentarnos?</label>
+          <textarea id="comentarios" name="comentarios" rows="4" maxlength="500" class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-primary resize-none" placeholder="Escribe aquí tus comentarios adicionales..."></textarea>
+          <div class="text-xs text-gray-500 mt-1">Máximo 500 caracteres</div>
+        </div>
+
+        <!-- Checkbox privacidad -->
+        <div class="flex items-center">
+          <label class="custom-checkbox text-xs md:text-sm text-gray-700">
+            Acepto la política de privacidad
+            <input type="checkbox" required>
+            <span class="checkmark"></span>
+          </label>
+        </div>
+
+        <!-- Botón -->
+        <div class="text-center">
+          <button type="submit" class="bg-primary hover:bg-primary/90 text-white font-medium py-3 px-8 rounded-button transition-all">Solicitar presupuesto</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</section>
+<!-- Call Scheduling Section -->
+<section class="py-12 md:py-20 bg-white">
+<div class="container mx-auto px-4">
+<div class="max-w-3xl mx-auto text-center">
+<h2 class="text-2xl md:text-4xl font-bold mb-4">¿Quieres agendar una llamada gratuita con nosotros?</h2>
+<p class="text-base md:text-lg text-gray-600 mb-8">Rellena nuestro formulario y nos pondremos en contacto contigo para resolver todas tus dudas.</p>
+<div class="bg-primary/5 rounded-xl p-6 md:p-8 text-left">
+<div class="flex flex-col md:flex-row items-center gap-8">
+<div class="w-full md:w-1/2">
+<div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6 mx-auto md:mx-0">
+<i class="ri-phone-line ri-2x text-primary"></i>
+</div>
+<h3 class="text-xl font-bold text-gray-900 mb-4 text-center md:text-left">Beneficios de la llamada</h3>
+<ul class="space-y-3 text-gray-700">
+<li class="flex items-start">
+<div class="w-5 h-5 mt-1 flex-shrink-0 flex items-center justify-center mr-3 text-primary">
+<i class="ri-check-line"></i>
+</div>
+<span>Atención personalizada y resolución de dudas específicas</span>
+</li>
+<li class="flex items-start">
+<div class="w-5 h-5 mt-1 flex-shrink-0 flex items-center justify-center mr-3 text-primary">
+<i class="ri-check-line"></i>
+</div>
+<span>Evaluación inicial de tus necesidades</span>
+</li>
+<li class="flex items-start">
+<div class="w-5 h-5 mt-1 flex-shrink-0 flex items-center justify-center mr-3 text-primary">
+<i class="ri-check-line"></i>
+</div>
+<span>Información detallada sobre soluciones y costes</span>
+</li>
+</ul>
+<div class="mt-8 text-center md:text-left">
+<a href="/comenzarahoraform" class="bg-primary hover:bg-primary/90 text-white font-medium py-3 px-8 !rounded-button inline-block transition-all whitespace-nowrap">
+<i class="ri-calendar-line mr-2"></i>Agendar llamada
+</a>
+</div>
+</div>
+<div class="w-full md:w-1/2">
+<img src="https://readdy.ai/api/search-image?query=A%20modern%20dental%20clinic%20reception%20area%20with%20friendly%20staff%20attending%20phone%20calls%2C%20showing%20a%20professional%20and%20welcoming%20environment.%20The%20space%20features%20clean%20design%20with%20soft%20lighting%20and%20modern%20technology%20equipment&width=600&height=400&seq=dental-call-center&orientation=landscape" alt="Agendar llamada" class="rounded-lg shadow-lg w-full h-auto object-cover">
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer id="contacto" class="bg-gray-900 text-white py-12">
+<div class="container mx-auto px-4">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div>
+<h3 class="text-xl font-bold mb-4">DENTAL-IA</h3>
+<p class="mb-4">Impulsamos tu clínica dental con Inteligencia Artificial para generar presupuestos al instante y diseñar planes de tratamiento personalizados. Acelera tu flujo de trabajo, mejora la precisión diagnóstica y ofrece a tus pacientes una experiencia más ágil y segura.</p>
+</div>
+<div>
+<h3 class="text-xl font-bold mb-4">Contacto</h3>
+<ul class="space-y-3">
+<li class="flex items-start">
+<div class="w-5 h-5 mt-1 flex items-center justify-center mr-3">
+<i class="ri-mail-line"></i>
+</div>
+<span>dentalia@onlyiasolutions.com</span>
+</li>
+<li class="flex items-start">
+<div class="w-5 h-5 mt-1 flex items-center justify-center mr-3">
+<i class="ri-time-line"></i>
+</div>
+<span>Lun-Vie: 9:00-20:00 | Sáb: 9:00-14:00</span>
+</li>
+</ul>
+</div>
+</div>
+<div class="border-t border-gray-800 mt-10 pt-6">
+<div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 text-sm text-gray-400">
+<p>© 2025 DENTAL-IA. Todos los derechos reservados.</p>
+<div class="flex items-center gap-4 md:gap-8">
+<a href="/terminosservicio" class="hover:text-white transition-colors">Términos de servicio</a>
+<a href="/privacidad" class="hover:text-white transition-colors">Política de privacidad</a>
+<a href="/cookies" class="hover:text-white transition-colors">Política de cookies</a>
+</div>
+</div>
+</div>
+</div>
+</footer>
+<script id="mobile-menu-script">
+document.addEventListener('DOMContentLoaded', function() {
+const menuButton = document.querySelector('button.md\\:hidden');
+const mobileMenu = document.getElementById('mobile-menu');
+let menuOpen = false;
+menuButton.addEventListener('click', function() {
+menuOpen = !menuOpen;
+if (menuOpen) {
+mobileMenu.style.display = 'flex';
+menuButton.innerHTML = '<i class="ri-close-line ri-2x"></i>';
+} else {
+mobileMenu.style.display = 'none';
+menuButton.innerHTML = '<i class="ri-menu-line ri-2x"></i>';
+}
+});
+// Cerrar menú al hacer clic en un enlace
+const mobileLinks = mobileMenu.querySelectorAll('a');
+mobileLinks.forEach(link => {
+link.addEventListener('click', function() {
+mobileMenu.style.display = 'none';
+menuButton.innerHTML = '<i class="ri-menu-line ri-2x"></i>';
+menuOpen = false;
+});
+});
+});
+</script>
+<script id="smooth-scroll-script">
+document.addEventListener('DOMContentLoaded', function() {
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+anchor.addEventListener('click', function(e) {
+e.preventDefault();
+const targetId = this.getAttribute('href');
+if (targetId === '#top') {
+window.scrollTo({
+top: 0,
+behavior: 'smooth'
+});
+return;
+}
+const targetElement = document.querySelector(targetId);
+if (targetElement) {
+window.scrollTo({
+top: targetElement.offsetTop - 80,
+behavior: 'smooth'
+});
+}
+});
+});
+});
+</script>
+<script id="custom-select-script">
+document.addEventListener('DOMContentLoaded', function() {
+const customSelects = document.querySelectorAll('.custom-select');
+customSelects.forEach(customSelect => {
+const selectSelected = customSelect.querySelector('.select-selected');
+const selectItems = customSelect.querySelector('.select-items');
+const hiddenInput = customSelect.querySelector('input[type="hidden"]');
+// Mostrar/ocultar opciones al hacer clic en el select
+selectSelected.addEventListener('click', function(e) {
+e.stopPropagation();
+selectItems.classList.toggle('select-hide');
+selectSelected.classList.toggle('active');
+});
+// Seleccionar una opción
+const options = selectItems.querySelectorAll('div');
+options.forEach(option => {
+option.addEventListener('click', function() {
+selectSelected.querySelector('span').textContent = this.textContent;
+hiddenInput.value = this.textContent;
+// Marcar la opción seleccionada
+options.forEach(opt => opt.classList.remove('same-as-selected'));
+this.classList.add('same-as-selected');
+selectItems.classList.add('select-hide');
+});
+});
+// Cerrar el select al hacer clic fuera
+document.addEventListener('click', function() {
+selectItems.classList.add('select-hide');
+selectSelected.classList.remove('active');
+});
+});
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('presupuesto-dentalia-form');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault(); // ❌ Evita redirección
+
+    const formData = new FormData(form);
+
+    // ✅ ENVÍO SEGURO con FETCH
+    fetch(form.action, {
+      method: 'POST',
+      body: new URLSearchParams(formData),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    });
+
+    // ✅ MENSAJE DE CONFIRMACIÓN
+    const successMessage = document.createElement('div');
+    successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+    successMessage.textContent = '¡Gracias por tu tiempo! Hemos recibido tu información.';
+    document.body.appendChild(successMessage);
+
+    form.reset(); // limpia el formulario
+
+    setTimeout(() => {
+      successMessage.remove();
+    }, 4000);
+  });
+});
+</script>
+</body>
+</html>
