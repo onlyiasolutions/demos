@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.tailwindcss.com"></script>
+<title>Solvers | Solai</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:root {
+  --font-heading: 'Alias', 'Alias Exp', system-ui, -apple-system, sans-serif;
+  --font-body: 'Montserrat', system-ui, -apple-system, sans-serif;
+  --font-serif-italic: 'Playfair Display Italic', 'Playfair Display', serif;
+}
+@font-face {
+  font-family: 'Alias';
+  src: url('assets/FUENTES/Alias Exp/alias-font-1764929118-0/alias-regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Alias';
+  src: url('assets/FUENTES/Alias Exp/alias-font-1764929118-0/alias-bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('assets/FUENTES/Montserrat Medium/MontserratMedium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Playfair Display Italic';
+  src: url('assets/FUENTES/Playfair Display Italic/PlayfairDisplayItalic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+:root {
+  --primary: #3b82f6;
+  --primary-strong: #2563eb;
+  --accent: #3b82f6;
+  --bg: #0b1220;
+  --bg-2: #0f172a;
+  --glass: rgba(255, 255, 255, 0.04);
+  --glass-strong: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.08);
+  --text: #e5e7eb;
+}
+* { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: radial-gradient(circle at 10% 20%, rgba(124,130,255,0.08), transparent 25%),
+              radial-gradient(circle at 80% 0%, rgba(34,211,238,0.08), transparent 25%),
+              var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+h1, h2, h3, h4, h5, h6,
+.title, .heading {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  text-shadow:
+    0 12px 32px rgba(0,0,0,0.35),
+    0 4px 12px rgba(0,0,0,0.28);
+}
+.serif-italic {
+  font-family: var(--font-serif-italic);
+  font-style: italic;
+}
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cfilter id='n' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.18'/%3E%3C/svg%3E");
+  opacity: 0.22;
+}
+.glass {
+  background: linear-gradient(140deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(255,255,255,0.02);
+  backdrop-filter: blur(10px);
+}
+.glass-soft {
+  background: linear-gradient(140deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.03);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.24), 0 8px 22px rgba(0,0,0,0.18);
+  backdrop-filter: blur(10px);
+}
+.btn-primary {
+  background: linear-gradient(120deg, var(--primary), var(--accent));
+  color: #0b1220;
+  border-radius: 9999px;
+  border: 1px solid rgba(255,255,255,0.22);
+  font-weight: 600;
+  transition: transform 180ms ease, box-shadow 220ms ease, opacity 160ms ease;
+  box-shadow: 0 10px 30px rgba(59,130,246,0.28);
+}
+.btn-primary:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 18px 42px rgba(59,130,246,0.4);
+}
+.btn-ghost {
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+  transition: transform 180ms ease, box-shadow 220ms ease, color 160ms ease, background 160ms ease, border-color 160ms ease;
+}
+.btn-ghost:hover {
+  border-color: rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.12);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.24);
+}
+.btn-glass {
+  border-radius: 9999px;
+  border: 1px solid rgba(255,255,255,0.24);
+  background: rgba(255,255,255,0.08);
+  color: #e5e7eb;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 18px 48px rgba(0,0,0,0.26);
+  transition: transform 180ms ease, box-shadow 220ms ease, background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+.btn-glass:hover {
+  background: rgba(255,255,255,0.16);
+  border-color: rgba(255,255,255,0.32);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 22px 54px rgba(0,0,0,0.3);
+  color: #fff;
+}
+.btn-glass-dark {
+  border-radius: 9999px;
+  border: 1px solid rgba(255,255,255,0.28);
+  background: rgba(23,37,84,0.62);
+  color: #e5e7eb;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 18px 48px rgba(0,0,0,0.34);
+  transition: transform 180ms ease, box-shadow 220ms ease, background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+.btn-glass-dark:hover {
+  background: rgba(23,37,84,0.8);
+  border-color: rgba(255,255,255,0.38);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 22px 58px rgba(0,0,0,0.4);
+  color: #fff;
+}
+.filter-btn {
+  border: 1px solid rgba(255,255,255,0.18);
+  transition: transform 180ms ease, box-shadow 220ms ease, background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+.filter-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.22);
+  border-color: rgba(59,130,246,0.5);
+  background: rgba(59,130,246,0.12);
+}
+.scroll-target { scroll-margin-top: 120px; }
+.solver-card {
+  transition: none;
+  opacity: 1;
+}
+.solver-card:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: inherit;
+  background: inherit;
+}
+.solver-card.fade-out {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.solver-card.fade-in {
+  opacity: 1;
+  transform: none;
+}
+.badge {
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  letter-spacing: 0.01em;
+  background: rgba(59,130,246,0.12);
+  border: 1px solid rgba(59,130,246,0.35);
+  color: #dbeafe;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav-glass {
+  backdrop-filter: blur(10px);
+  background: rgba(11, 18, 32, 0.55);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  transition: all 200ms ease;
+}
+.nav-glass.scrolled {
+  background: rgba(11, 18, 32, 0.8);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.28);
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.floating {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.float-soft {
+  animation: floaty-soft 6s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes floaty-soft {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(0, -6px, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .float-soft { animation: none; transform: none; }
+}
+.hover-tilt {
+  transition: none;
+}
+.hover-tilt:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: inherit;
+}
+.solver-card.hover-tilt {
+  transition: none;
+}
+.solver-card.hover-tilt:hover {
+  transform: none;
+  box-shadow: none;
+}
+.chip {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  color: #e5e7eb;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+.section-title {
+  color: #e5e7eb;
+  letter-spacing: -0.02em;
+}
+.section-sub {
+  color: #cbd5e1;
+}
+.form-label { color: #cbd5e1; font-weight: 500; }
+.input-modern {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #e5e7eb;
+  min-height: 58px;
+  font-size: 1rem;
+  line-height: 1.3;
+  display: flex;
+  align-items: center;
+  transition: transform 180ms ease, box-shadow 220ms ease, background 180ms ease, border-color 180ms ease;
+}
+.input-modern:focus {
+  outline: none;
+  border-color: rgba(124,130,255,0.55);
+  box-shadow: 0 0 0 2px rgba(124,130,255,0.22);
+  transform: translateY(-1px) scale(1.01);
+  background: rgba(255,255,255,0.06);
+}
+.input-modern:hover {
+  background: rgba(255,255,255,0.05);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.22), 0 0 0 1px rgba(124,130,255,0.25);
+}
+.input-modern:active {
+  transform: translateY(0);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.18), 0 0 0 2px rgba(124,130,255,0.35);
+  border-color: rgba(124,130,255,0.45);
+}
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  height: 100%;
+}
+.form-label {
+  display: flex;
+  align-items: flex-end;
+  min-height: 48px;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+.label-tight {
+  min-height: 28px;
+  margin-bottom: 2px;
+  line-height: 1.1;
+}
+.form-anim {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 320ms ease, transform 420ms ease;
+  transition-delay: var(--d, 0ms);
+}
+.form-anim.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+.toast {
+  animation: slideIn 220ms ease;
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.parallax {
+  transition: transform 400ms cubic-bezier(.2,.8,.2,1);
+}
+.sr-only-focusable:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  clip: auto;
+}
+</style>
+</head>
+<body id="top" class="bg-slate-950 text-slate-50 antialiased overflow-x-hidden relative">
+  <div class="pointer-events-none fixed inset-0 -z-10">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(124,130,255,0.20),transparent_30%),radial-gradient(circle_at_80%_10%,rgba(34,211,238,0.18),transparent_34%),radial-gradient(circle_at_50%_80%,rgba(236,72,153,0.12),transparent_40%)]"></div>
+    <div class="absolute inset-0 bg-noise mix-blend-soft-light"></div>
+  </div>
+
+  <!-- Header -->
+  <header id="main-nav" class="nav-glass fixed top-0 left-0 right-0 z-50 transition-all">
+    <div class="container mx-auto px-5 lg:px-8 flex items-center justify-between py-4">
+      <div class="flex items-center gap-3">
+        <a href="https://wesolai.com" class="btn-ghost px-3 py-2 text-sm font-semibold inline-flex items-center gap-2">
+          <i class="ri-arrow-left-up-line"></i>
+        </a>
+        <a href="#top" class="flex items-center gap-3 group">
+          <img src="assets/LOGOS/LOGONEGROSOBREBLANCO.png" alt="Logo Solai" class="h-10 w-auto drop-shadow-md rounded">
+          <div class="leading-tight">
+            <div class="text-lg md:text-xl font-bold tracking-tight group-hover:text-white transition-colors">Solvers</div>
+            <div class="text-xs text-slate-300 font-medium group-hover:text-slate-100 transition-colors">by Solai</div>
+          </div>
+        </a>
+      </div>
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-200">
+        <a href="#top" class="hover:text-white transition-colors relative after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-[var(--primary)] after:transition-all after:duration-300 hover:after:w-full">Inicio</a>
+        <a href="#solvers" class="hover:text-white transition-colors relative after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-[var(--primary)] after:transition-all after:duration-300 hover:after:w-full">Solvers</a>
+        <a href="#demo-quote" class="hover:text-white transition-colors relative after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-[var(--primary)] after:transition-all after:duration-300 hover:after:w-full">Probar</a>
+      </nav>
+      <div class="hidden md:flex items-center gap-3">
+        <a href="https://wesolai.com/consultoria" target="_blank" rel="noreferrer" class="btn-glass-dark px-4 py-2 text-sm font-semibold inline-flex items-center gap-2">
+          <i class="ri-calendar-line"></i> Agendar llamada
+        </a>
+      </div>
+      <button id="mobile-toggle" aria-label="Abrir menú" aria-expanded="false" class="md:hidden w-11 h-11 flex items-center justify-center rounded-full border border-white/10 text-white hover:bg-white/10 transition">
+        <i class="ri-menu-line ri-lg"></i>
+      </button>
+    </div>
+    <div id="mobile-menu" class="md:hidden hidden flex-col gap-3 px-5 pb-5 pt-3 bg-slate-900/90 backdrop-blur-md border-t border-white/10 rounded-b-2xl">
+      <a href="#top" class="px-4 py-3 rounded-lg glass-soft hover:bg-white/10">Inicio</a>
+      <a href="#solvers" class="px-4 py-3 rounded-lg glass-soft hover:bg-white/10">Solvers</a>
+      <a href="#demo-quote" class="px-4 py-3 rounded-lg glass-soft hover:bg-white/10">Probar</a>
+      <a href="https://wesolai.com/consultoria" target="_blank" rel="noreferrer" class="px-4 py-3 rounded-lg btn-glass-dark text-center">Agendar llamada</a>
+    </div>
+  </header>
+
+  <main class="relative">
+    <!-- Hero -->
+    <section id="hero" class="min-h-screen flex items-center pt-24 md:pt-28 pb-16 md:pb-20 relative overflow-hidden">
+      <div class="container mx-auto px-5 lg:px-8 relative">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div class="space-y-6">
+              <h1 class="section-title text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight reveal bg-clip-text text-transparent bg-gradient-to-r from-white via-[var(--accent)] to-white">
+              Solvers de IA para negocios
+            </h1>
+            <p class="section-sub text-lg md:text-xl max-w-2xl reveal">
+              Explora, prueba y entiende cómo operan los Solvers de Solai en ventas, soporte, reservas y automatización.
+            </p>
+            <div class="flex flex-wrap gap-3 reveal">
+              <span class="chip">Texto · Voz · Dashboard · Integraciones</span>
+              <span class="chip">Disponibles para probar</span>
+              <span class="chip">Aplicable a cualquier sector</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-4 reveal">
+              <a href="#solvers" class="btn-ghost px-6 py-3 inline-flex items-center gap-2">
+                <i class="ri-layout-grid-line"></i> Ver solvers
+              </a>
+              <a href="https://wesolai.com/consultoria" target="_blank" rel="noreferrer" class="btn-glass-dark px-6 py-3 inline-flex items-center gap-2">
+                <i class="ri-calendar-line"></i> Agendar llamada
+              </a>
+            </div>
+            <p class="text-slate-400 text-sm reveal">¿Prefieres hablar? Llama al <a class="underline" href="tel:+34919933075">+34 919 93 30 75</a>.</p>
+          </div>
+
+          <div class="relative space-y-3">
+            <div class="glass rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden reveal parallax-hero translate-y-[-8px]">
+              <div class="absolute -right-10 -top-12 w-40 h-40 bg-gradient-to-br from-[var(--primary)]/25 to-[var(--accent)]/20 blur-2xl"></div>
+              <div class="absolute -left-10 -bottom-16 w-44 h-44 bg-gradient-to-br from-pink-500/10 to-[var(--primary)]/15 blur-2xl"></div>
+              <div class="relative space-y-6">
+                <div class="flex items-center justify-between gap-3">
+                  <div class="flex items-center gap-3">
+                    <div class="h-12 w-12 rounded-2xl bg-white/10 border border-white/10 flex items-center justify-center">
+                      <i class="ri-robot-2-line text-xl text-white parallax" data-parallax></i>
+                    </div>
+                    <div>
+                      <p class="text-sm text-slate-300">QUOTE | Agente de presupuestos</p>
+                      <p class="text-lg font-semibold">Presupuesto ultra-rápido</p>
+                    </div>
+                  </div>
+                  <span class="chip">Texto</span>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="glass-soft rounded-2xl p-4 border border-white/5 hover-tilt">
+                    <p class="text-xs text-slate-400">Tiempo medio</p>
+                    <p class="text-2xl font-semibold text-white">28s</p>
+                    <p class="text-xs text-slate-500">de respuesta al cliente</p>
+                  </div>
+                  <div class="glass-soft rounded-2xl p-4 border border-white/5 hover-tilt">
+                    <p class="text-xs text-slate-400">Automatización</p>
+                    <p class="text-2xl font-semibold text-white">+18</p>
+                    <p class="text-xs text-slate-500">tareas delegadas</p>
+                  </div>
+                </div>
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-4 flex items-start gap-3">
+                  <i class="ri-shield-check-line text-[var(--accent)] text-2xl"></i>
+                  <div>
+                    <p class="font-semibold">Seguridad y compliance</p>
+                    <p class="text-sm text-slate-300">Datos cifrados, avisos legales y trazabilidad para auditorías.</p>
+                  </div>
+                </div>
+                <div class="flex flex-wrap items-center gap-3 pt-1">
+                  <a href="#demo-quote" class="btn-glass px-4 py-2 text-sm font-semibold inline-flex items-center gap-2">
+                    <i class="ri-flashlight-line"></i> Probar Solver
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="glass-soft rounded-2xl border border-white/10 p-5 flex flex-col gap-3 reveal parallax-hero translate-y-[-8px]">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="h-10 w-10 rounded-full bg-white/10 border border-white/10 flex items-center justify-center"><i class="ri-phone-line"></i></span>
+                  <div>
+                    <p class="text-sm text-slate-300">AURI/LYRA | Voz</p>
+                    <p class="text-base font-semibold">Asistente telefónico 24/7</p>
+                  </div>
+                </div>
+                <span class="chip">Voz</span>
+              </div>
+              <p class="text-slate-200 text-sm">Atiende/realiza llamadas, filtra y agenda. Si no resuelve, deriva.</p>
+              <div class="grid grid-cols-2 gap-3">
+                <div class="glass rounded-xl p-3 border border-white/10 hover-tilt">
+                  <p class="text-xs text-slate-300">Tiempo medio de respuesta</p>
+                  <p class="text-lg font-semibold">12s</p>
+                  <p class="text-xs text-slate-400">en atención telefónica</p>
+                </div>
+                <div class="glass rounded-xl p-3 border border-white/10 hover-tilt">
+                  <p class="text-xs text-slate-300">Resolución sin derivar</p>
+                  <p class="text-lg font-semibold">78%</p>
+                  <p class="text-xs text-slate-400">llamadas cerradas en primer toque</p>
+                </div>
+              </div>
+              <div class="flex flex-wrap items-center gap-3 pt-1 justify-end">
+                <a href="tel:+34919933075" class="btn-glass px-4 py-2 text-sm font-semibold inline-flex items-center gap-2 ml-auto">
+                  <i class="ri-flashlight-line"></i> Probar Solver
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Catálogo de Solvers -->
+    <section id="solvers" class="py-16 md:py-24">
+      <div class="container mx-auto px-5 lg:px-8 space-y-8">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div class="space-y-2">
+            <span class="badge">Catálogo funcional</span>
+            <h2 class="section-title text-3xl md:text-4xl font-semibold">Explora los solvers por canal y estado.</h2>
+            <p class="section-sub">Filtros locales, cards homogéneas, información clara para cualquier negocio.</p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button class="filter-btn chip border border-white/20" data-filter="all">Todos</button>
+            <button class="filter-btn chip border border-white/20" data-filter="mvp">Probar</button>
+            <button class="filter-btn chip border border-white/20" data-filter="texto">Texto</button>
+            <button class="filter-btn chip border border-white/20" data-filter="voz">Voz</button>
+            <button class="filter-btn chip border border-white/20" data-filter="dashboard">Dashboard</button>
+            <button class="filter-btn chip border border-white/20" data-filter="integracion">Integraciones</button>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-7" id="solvers-grid">
+          <article class="solver-card glass-soft rounded-3xl p-6 border border-white/5 hover-tilt reveal flex flex-col" data-solver data-channel="texto voz" data-mvp="false">
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <p class="text-sm text-slate-400">NEXO</p>
+                <h3 class="text-xl font-semibold">Gestor inteligente de reservas</h3>
+              </div>
+              <span class="chip">Texto + Voz</span>
+            </div>
+            <p class="text-slate-300 mb-3">Atiende/realiza, responde y agenda por texto y voz.</p>
+            <ul class="text-sm text-slate-200 space-y-2 mb-4">
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Rol: Gestor inteligente de reservas.</li>
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Función: Atiende/realiza, responde y agenda.</li>
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Listo para demo guiada.</li>
+            </ul>
+            <div class="flex flex-wrap gap-3 mt-auto pt-2">
+              <a href="https://wesolai.com/consultoria" target="_blank" rel="noreferrer" class="btn-primary px-4 py-2 text-sm font-semibold inline-flex items-center gap-2">Solicitar demo guiada</a>
+            </div>
+            <div id="detail-nexo-1" class="hidden mt-3 text-sm text-slate-300 border border-white/10 rounded-2xl p-3 bg-white/5">
+              Ideal para negocios que gestionan agenda en varios canales y necesitan respuestas inmediatas.
+            </div>
+          </article>
+
+          <article class="solver-card glass-soft rounded-3xl p-6 border border-white/5 hover-tilt reveal flex flex-col" data-solver data-channel="texto" data-mvp="true">
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <p class="text-sm text-slate-400">Quote</p>
+                <h3 class="text-xl font-semibold">Presupuestador automático</h3>
+              </div>
+              <span class="chip">Texto</span>
+            </div>
+            <p class="text-slate-300 mb-3">Generación de presupuestos y seguimiento.</p>
+            <ul class="text-sm text-slate-200 space-y-2 mb-4">
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Rol: Presupuestador automático.</li>
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Función: Generación de presupuestos + seguimiento.</li>
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Prueba directa disponible.</li>
+            </ul>
+            <div class="flex flex-wrap gap-3 mt-auto pt-2">
+              <a href="https://wesolai.com/consultoria" target="_blank" rel="noreferrer" class="btn-primary px-4 py-2 text-sm font-semibold inline-flex items-center gap-2">Solicitar demo guiada</a>
+              <a href="#quote-form-start" class="btn-ghost px-4 py-2 text-sm font-semibold inline-flex items-center gap-2">Probar</a>
+            </div>
+            <div id="detail-quote" class="hidden mt-3 text-sm text-slate-300 border border-white/10 rounded-2xl p-3 bg-white/5">
+              Demo directa: completa el formulario y recibe un presupuesto en segundos.
+            </div>
+          </article>
+
+          <article class="solver-card glass-soft rounded-3xl p-6 border border-white/5 hover-tilt reveal flex flex-col" data-solver data-channel="voz" data-mvp="true">
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <p class="text-sm text-slate-400">AURI / LYRA</p>
+                <h3 class="text-xl font-semibold">Asistente telefónico IA</h3>
+              </div>
+              <span class="chip">Voz</span>
+            </div>
+            <p class="text-slate-300 mb-3">Atiende/realiza llamadas, filtra y agenda.</p>
+            <ul class="text-sm text-slate-200 space-y-2 mb-4">
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Rol: Asistente telefónico IA.</li>
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Función: Atiende/realiza, filtra, agenda.</li>
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Prueba por llamada disponible.</li>
+            </ul>
+            <div class="flex flex-wrap gap-3 mt-auto pt-2">
+              <a href="https://wesolai.com/consultoria" target="_blank" rel="noreferrer" class="btn-primary px-4 py-2 text-sm font-semibold inline-flex items-center gap-2 shadow-[0_15px_45px_rgba(59,130,246,0.35)]">Solicitar demo guiada</a>
+              <a href="tel:+34919933075" class="btn-ghost px-4 py-2 text-sm font-semibold inline-flex items-center gap-2">Probar</a>
+            </div>
+            <div id="detail-auri-1" class="hidden mt-3 text-sm text-slate-300 border border-white/10 rounded-2xl p-3 bg-white/5">
+              Atención automática 24/7; si no resuelve, agenda o deriva al equipo.
+            </div>
+          </article>
+
+          <article class="solver-card glass-soft rounded-3xl p-6 border border-white/5 hover-tilt reveal flex flex-col" data-solver data-channel="texto" data-mvp="false">
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <p class="text-sm text-slate-400">Remind</p>
+                <h3 class="text-xl font-semibold">Recordatorios automáticos</h3>
+              </div>
+              <span class="chip">Texto</span>
+            </div>
+            <p class="text-slate-300 mb-3">Reduce no-shows con secuencias 24h / 3h / 1h.</p>
+            <ul class="text-sm text-slate-200 space-y-2 mb-4">
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Rol: Recordatorios automáticos.</li>
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Secuencias: 24h / 3h / 1h.</li>
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Canal texto, sin fricción.</li>
+            </ul>
+            <div class="flex flex-wrap gap-3 mt-auto pt-2">
+              <a href="https://wesolai.com/consultoria" target="_blank" rel="noreferrer" class="btn-primary px-4 py-2 text-sm font-semibold inline-flex items-center gap-2">Solicitar demo guiada</a>
+            </div>
+            <div id="detail-remind" class="hidden mt-3 text-sm text-slate-300 border border-white/10 rounded-2xl p-3 bg-white/5">
+              Mensajería programada y confirmaciones para minimizar cancelaciones y ausencias.
+            </div>
+          </article>
+
+          <article class="solver-card glass-soft rounded-3xl p-6 border border-white/5 hover-tilt reveal flex flex-col" data-solver data-channel="texto" data-mvp="false">
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <p class="text-sm text-slate-400">Nodo</p>
+                <h3 class="text-xl font-semibold">Atención multicanal</h3>
+              </div>
+              <span class="chip">Texto</span>
+            </div>
+            <p class="text-slate-300 mb-3">Centraliza WhatsApp, web, redes y email.</p>
+            <ul class="text-sm text-slate-200 space-y-2 mb-4">
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Rol: Atención multicanal.</li>
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Función: Centraliza canales.</li>
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Derivación rápida al equipo.</li>
+            </ul>
+            <div class="flex flex-wrap gap-3 mt-auto pt-2">
+              <a href="https://wesolai.com/consultoria" target="_blank" rel="noreferrer" class="btn-primary px-4 py-2 text-sm font-semibold inline-flex items-center gap-2">Solicitar demo guiada</a>
+            </div>
+            <div id="detail-nodo" class="hidden mt-3 text-sm text-slate-300 border border-white/10 rounded-2xl p-3 bg-white/5">
+              Unifica mensajería y evita perder consultas entre canales dispersos.
+            </div>
+          </article>
+
+          <article class="solver-card glass-soft rounded-3xl p-6 border border-white/5 hover-tilt reveal flex flex-col" data-solver data-channel="texto email" data-mvp="false">
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <p class="text-sm text-slate-400">Recapture IA</p>
+                <h3 class="text-xl font-semibold">Reactivación y fidelización</h3>
+              </div>
+              <span class="chip">Texto + Email/Campañas</span>
+            </div>
+            <p class="text-slate-300 mb-3">Reactivación automática 30/60/90 días + leads perdidos.</p>
+            <ul class="text-sm text-slate-200 space-y-2 mb-4">
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Rol: Reactivación y fidelización.</li>
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Función: 30/60/90 días + leads perdidos.</li>
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Campañas multicanal.</li>
+            </ul>
+            <div class="flex flex-wrap gap-3 mt-auto pt-2">
+              <a href="https://wesolai.com/consultoria" target="_blank" rel="noreferrer" class="btn-primary px-4 py-2 text-sm font-semibold inline-flex items-center gap-2">Solicitar demo guiada</a>
+            </div>
+            <div id="detail-recapture" class="hidden mt-3 text-sm text-slate-300 border border-white/10 rounded-2xl p-3 bg-white/5">
+              Secuencias definidas para mantener recurrencia y reactivar cuentas dormidas.
+            </div>
+          </article>
+
+          <article class="solver-card glass-soft rounded-3xl p-6 border border-white/5 hover-tilt reveal flex flex-col" data-solver data-channel="dashboard" data-mvp="false">
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <p class="text-sm text-slate-400">Control</p>
+                <h3 class="text-xl font-semibold">Dirección y métricas</h3>
+              </div>
+              <span class="chip">Dashboard</span>
+            </div>
+            <p class="text-slate-300 mb-3">KPIs, recurrencia, cancelaciones, rendimiento.</p>
+            <ul class="text-sm text-slate-200 space-y-2 mb-4">
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Rol: Dirección y métricas.</li>
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Función: KPIs, recurrencia, cancelaciones.</li>
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Panel ejecutivo.</li>
+            </ul>
+            <div class="flex flex-wrap gap-3 mt-auto pt-2">
+              <a href="https://wesolai.com/consultoria" target="_blank" rel="noreferrer" class="btn-primary px-4 py-2 text-sm font-semibold inline-flex items-center gap-2">Solicitar demo guiada</a>
+            </div>
+            <div id="detail-control" class="hidden mt-3 text-sm text-slate-300 border border-white/10 rounded-2xl p-3 bg-white/5">
+              Vista para dirección con foco en recurrencia y rendimiento operativo.
+            </div>
+          </article>
+
+          <article class="solver-card glass-soft rounded-3xl p-6 border border-white/5 hover-tilt reveal flex flex-col" data-solver data-channel="texto" data-mvp="false">
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <p class="text-sm text-slate-400">FAQ Asesor</p>
+                <h3 class="text-xl font-semibold">FAQ automatizada</h3>
+              </div>
+              <span class="chip">Texto</span>
+            </div>
+            <p class="text-slate-300 mb-3">Resuelve preguntas frecuentes y filtra casos.</p>
+            <ul class="text-sm text-slate-200 space-y-2 mb-4">
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Rol: FAQ automatizada.</li>
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Función: Resuelve FAQs y filtra.</li>
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Lista para demo.</li>
+            </ul>
+            <div class="flex flex-wrap gap-3 mt-auto pt-2">
+              <a href="https://wesolai.com/consultoria" target="_blank" rel="noreferrer" class="btn-primary px-4 py-2 text-sm font-semibold inline-flex items-center gap-2">Solicitar demo guiada</a>
+            </div>
+            <div id="detail-faq" class="hidden mt-3 text-sm text-slate-300 border border-white/10 rounded-2xl p-3 bg-white/5">
+              Ideal para liberar front desk con respuestas consistentes y filtrado previo.
+            </div>
+          </article>
+
+          <article class="solver-card glass-soft rounded-3xl p-6 border border-white/5 hover-tilt reveal flex flex-col" data-solver data-channel="texto web" data-mvp="false">
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <p class="text-sm text-slate-400">LeadFlow</p>
+                <h3 class="text-xl font-semibold">Captador inteligente</h3>
+              </div>
+              <span class="chip">Texto / Web</span>
+            </div>
+            <p class="text-slate-300 mb-3">Formularios + captación + agenda.</p>
+            <ul class="text-sm text-slate-200 space-y-2 mb-4">
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Rol: Captador inteligente.</li>
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Función: Formularios y agenda.</li>
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Listo para probar guiado.</li>
+            </ul>
+            <div class="flex flex-wrap gap-3 mt-auto pt-2">
+              <a href="https://wesolai.com/consultoria" target="_blank" rel="noreferrer" class="btn-primary px-4 py-2 text-sm font-semibold inline-flex items-center gap-2">Solicitar demo guiada</a>
+            </div>
+            <div id="detail-leadflow" class="hidden mt-3 text-sm text-slate-300 border border-white/10 rounded-2xl p-3 bg-white/5">
+              Pensado para captación web con agenda integrada y scoring básico.
+            </div>
+          </article>
+
+          <article class="solver-card glass-soft rounded-3xl p-6 border border-white/5 hover-tilt reveal flex flex-col" data-solver data-channel="texto formularios" data-mvp="false">
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <p class="text-sm text-slate-400">Onboarder Pro</p>
+                <h3 class="text-xl font-semibold">Onboarding automático</h3>
+              </div>
+              <span class="chip">Texto + Formularios</span>
+            </div>
+            <p class="text-slate-300 mb-3">Checklist + documentos + carpetas automáticas.</p>
+            <ul class="text-sm text-slate-200 space-y-2 mb-4">
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Rol: Onboarding automático.</li>
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Función: Checklist y documentos.</li>
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Preparación previa al servicio.</li>
+            </ul>
+            <div class="flex flex-wrap gap-3 mt-auto pt-2">
+              <a href="https://wesolai.com/consultoria" target="_blank" rel="noreferrer" class="btn-primary px-4 py-2 text-sm font-semibold inline-flex items-center gap-2">Solicitar demo guiada</a>
+            </div>
+            <div id="detail-onboarder" class="hidden mt-3 text-sm text-slate-300 border border-white/10 rounded-2xl p-3 bg-white/5">
+              Automatiza documentación previa y reduce tiempos administrativos.
+            </div>
+          </article>
+
+          <article class="solver-card glass-soft rounded-3xl p-6 border border-white/5 hover-tilt reveal flex flex-col" data-solver data-channel="dashboard ia" data-mvp="false">
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <p class="text-sm text-slate-400">Control Fiscal</p>
+                <h3 class="text-xl font-semibold">Dirección y control fiscal</h3>
+              </div>
+              <span class="chip">Dashboard + IA</span>
+            </div>
+            <p class="text-slate-300 mb-3">Vencimientos, avisos y métricas globales.</p>
+            <ul class="text-sm text-slate-200 space-y-2 mb-4">
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Rol: Control fiscal.</li>
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Función: Vencimientos y avisos.</li>
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Métricas globales integradas.</li>
+            </ul>
+            <div class="flex flex-wrap gap-3 mt-auto pt-2">
+              <a href="https://wesolai.com/consultoria" target="_blank" rel="noreferrer" class="btn-primary px-4 py-2 text-sm font-semibold inline-flex items-center gap-2">Solicitar demo guiada</a>
+            </div>
+            <div id="detail-fiscal" class="hidden mt-3 text-sm text-slate-300 border border-white/10 rounded-2xl p-3 bg-white/5">
+              Panel ejecutivo para cumplir hitos fiscales y anticipar riesgos.
+            </div>
+          </article>
+
+          <article class="solver-card glass-soft rounded-3xl p-6 border border-white/5 hover-tilt reveal flex flex-col" data-solver data-channel="integracion" data-mvp="false">
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <p class="text-sm text-slate-400">Central Hub</p>
+                <h3 class="text-xl font-semibold">Panel de gestión</h3>
+              </div>
+              <span class="chip">Integración</span>
+            </div>
+            <p class="text-slate-300 mb-3">Comunicación, archivos y tareas internas.</p>
+            <ul class="text-sm text-slate-200 space-y-2 mb-4">
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Rol: Panel de gestión.</li>
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Función: Comunicación interna.</li>
+              <li class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Archivos y tareas en un solo lugar.</li>
+            </ul>
+            <div class="flex flex-wrap gap-3 mt-auto pt-2">
+              <a href="https://wesolai.com/consultoria" target="_blank" rel="noreferrer" class="btn-primary px-4 py-2 text-sm font-semibold inline-flex items-center gap-2">Solicitar demo guiada</a>
+            </div>
+            <div id="detail-hub" class="hidden mt-3 text-sm text-slate-300 border border-white/10 rounded-2xl p-3 bg-white/5">
+              Centro operativo para equipos clínicos y administrativos.
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Probar ahora -->
+    <section id="demo-quote" class="py-16 md:py-24">
+      <div class="container mx-auto px-5 lg:px-8">
+        <div class="glass rounded-3xl border border-white/10 p-8 md:p-12 shadow-2xl">
+          <div class="grid lg:grid-cols-2 gap-10 items-start">
+            <div class="space-y-4">
+              <span class="badge">Probar ahora</span>
+              <h2 class="section-title text-3xl md:text-4xl font-semibold">Quote · Presupuesto inteligente en segundos.</h2>
+              <p class="section-sub">Completa el formulario y recibe el presupuesto por email. Lógica y endpoint originales respetados.</p>
+                  <div class="space-y-3 text-sm text-slate-200" id="quote-form-start">
+                <div class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Envío real y seguro.</div>
+                <div class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Estados de carga, éxito y error con toasts.</div>
+                <div class="flex gap-2"><i class="ri-check-line text-[var(--accent)]"></i> Privacidad y enlaces legales actualizados.</div>
+                <div class="flex gap-2">
+                  <i class="ri-alarm-warning-line text-[var(--accent)]"></i>
+                  <span>Si tardas más de 5 minutos, se van a la competencia. No pierdas ni un solo lead gracias a Quote.</span>
+                </div>
+              </div>
+              <div class="flex flex-wrap gap-3 text-sm text-slate-300">
+                <span class="chip">Te llega por email en segundos</span>
+                <span class="chip">Sin compromiso</span>
+              </div>
+          <a href="https://wesolai.com/consultoria" target="_blank" rel="noreferrer" class="btn-glass-dark px-5 py-3 inline-flex items-center gap-2 text-sm font-semibold">
+                <i class="ri-calendar-line"></i> Prefiero agendar llamada
+              </a>
+            </div>
+
+            <div class="glass-soft rounded-2xl border border-white/10 p-6 md:p-7 shadow-xl relative overflow-hidden">
+              <div class="absolute -right-16 -top-16 w-36 h-36 bg-[var(--primary)]/15 blur-2xl"></div>
+              <div class="absolute -left-10 -bottom-16 w-44 h-44 bg-[var(--accent)]/15 blur-2xl"></div>
+              <div class="relative">
+                <form id="quote-form" class="space-y-5 pt-2 scroll-target" aria-label="Formulario Probar Quote" action="https://n8n.srv975799.hstgr.cloud/webhook/1080d1f2-ddea-4c81-86d5-11b29b2ffff3" method="POST">
+                  <div class="grid md:grid-cols-2 gap-4 md:gap-5">
+                    <div class="form-field form-anim" style="--d:0ms">
+                      <label for="nombre" class="form-label label-tight text-sm block">Nombre <span class="text-pink-300">*</span></label>
+                      <input type="text" id="nombre" name="nombre" required class="input-modern w-full px-4 py-3 rounded-xl" placeholder="Ej. María">
+                    </div>
+                    <div class="form-field form-anim" style="--d:60ms">
+                      <label for="apellidos" class="form-label label-tight text-sm block">Apellidos <span class="text-pink-300">*</span></label>
+                      <input type="text" id="apellidos" name="apellidos" required class="input-modern w-full px-4 py-3 rounded-xl" placeholder="Ej. García López">
+                    </div>
+                  </div>
+
+                  <div class="grid md:grid-cols-2 gap-4 md:gap-5">
+                    <div class="form-field form-anim" style="--d:120ms">
+                      <label for="email" class="form-label label-tight text-sm block">Correo Electrónico <span class="text-pink-300">*</span></label>
+                      <input type="email" id="email" name="email" required class="input-modern w-full px-4 py-3 rounded-xl" placeholder="ejemplo@correo.com">
+                    </div>
+                    <div class="form-field form-anim" style="--d:180ms">
+                      <label for="telefono" class="form-label label-tight text-sm block">Teléfono <span class="text-pink-300">*</span></label>
+                      <input type="tel" id="telefono" name="telefono" required class="input-modern w-full px-4 py-3 rounded-xl" placeholder="Ej. 612 345 678">
+                    </div>
+                  </div>
+
+                    <div class="form-field form-anim" style="--d:240ms">
+                    <label for="necesidad" class="form-label label-tight text-sm block">¿Cuál es tu principal necesidad dental ahora mismo?</label>
+                    <select id="necesidad" name="necesidad" required class="input-modern w-full px-4 py-3 rounded-xl">
+                      <option value="" disabled selected>Selecciona una opción</option>
+                      <option>Quiero mejorar la estética de mi sonrisa</option>
+                      <option>Tengo dolor o molestias</option>
+                      <option>Necesito una revisión general</option>
+                      <option>Necesito un tratamiento específico</option>
+                      <option>Quiero consultar precios</option>
+                      <option>Otro motivo</option>
+                    </select>
+                  </div>
+
+                  <div class="grid md:grid-cols-2 gap-4 md:gap-5">
+                    <div class="form-field form-anim" style="--d:300ms">
+                      <label for="ultima_visita" class="form-label text-sm mb-2 block">¿Has visitado recientemente a un dentista?</label>
+                      <select id="ultima_visita" name="ultima_visita" required class="input-modern w-full px-4 py-3 rounded-xl">
+                        <option value="" disabled selected>Selecciona una opción</option>
+                        <option>Sí, en los últimos 6 meses</option>
+                        <option>Sí, hace más de 6 meses</option>
+                        <option>No, hace mucho tiempo</option>
+                        <option>Nunca</option>
+                      </select>
+                    </div>
+                    <div class="form-field form-anim" style="--d:360ms">
+                      <label for="urgencia" class="form-label text-sm mb-2 block">¿Cuál es tu nivel de urgencia?</label>
+                      <select id="urgencia" name="urgencia" required class="input-modern w-full px-4 py-3 rounded-xl">
+                        <option value="" disabled selected>Selecciona una opción</option>
+                        <option>Lo antes posible</option>
+                        <option>En las próximas semanas</option>
+                        <option>Solo estoy informándome por ahora</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="grid md:grid-cols-2 gap-4 md:gap-5">
+                    <div class="form-field form-anim" style="--d:420ms">
+                      <label for="detalles" class="form-label text-sm mb-2 block">¿Qué te gustaría saber con más detalle?</label>
+                      <select id="detalles" name="detalles" required class="input-modern w-full px-4 py-3 rounded-xl">
+                        <option value="" disabled selected>Selecciona una opción</option>
+                        <option>Precio total estimado</option>
+                        <option>Posibilidades de financiación</option>
+                        <option>Tiempo estimado de tratamiento</option>
+                        <option>Opciones de estética dental</option>
+                        <option>Opciones sin dolor / anestesia</option>
+                        <option>Todo lo anterior</option>
+                      </select>
+                    </div>
+                    <div class="form-field form-anim" style="--d:480ms">
+                      <label for="seguro_dental" class="form-label text-sm mb-2 block">¿Tienes seguro dental?</label>
+                      <select id="seguro_dental" name="seguro_dental" required class="input-modern w-full px-4 py-3 rounded-xl">
+                        <option value="" disabled selected>Selecciona una opción</option>
+                        <option>Sí</option>
+                        <option>No</option>
+                        <option>No lo sé</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-field form-anim" style="--d:540ms">
+                    <label for="comentarios" class="form-label label-tight text-sm block">¿Algo más que quieras comentarnos?</label>
+                    <textarea id="comentarios" name="comentarios" rows="4" maxlength="500" class="input-modern w-full px-4 py-3 rounded-xl resize-none" placeholder="Escribe aquí tus comentarios adicionales..."></textarea>
+                    <div class="text-xs text-slate-400 mt-1">Máximo 500 caracteres</div>
+                  </div>
+
+                  <div class="flex items-start gap-3 form-anim" style="--d:600ms">
+                    <input id="privacy" type="checkbox" required class="mt-1 h-5 w-5 rounded border-white/20 bg-white/5 text-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/60">
+                    <label for="privacy" class="text-sm text-slate-200 leading-relaxed">Acepto la <a href="https://wesolai.com/politica-privacidad" target="_blank" rel="noreferrer" class="underline text-[var(--accent)]">política de privacidad</a>.</label>
+                  </div>
+
+                  <div class="space-y-2 form-anim" style="--d:660ms">
+                    <button type="submit" class="btn-primary w-full py-3.5 text-base font-semibold inline-flex items-center justify-center gap-2">
+                      <i class="ri-send-plane-fill"></i>
+                      <span>Solicitar presupuesto</span>
+                    </button>
+                    <p class="text-xs text-center text-slate-400">Te llega por email en segundos · Sin compromiso</p>
+                  </div>
+                  <div id="toast-container" class="fixed top-4 right-4 z-[100] space-y-2" aria-live="polite"></div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Llamada -->
+    <section class="py-14 md:py-20">
+      <div class="container mx-auto px-5 lg:px-8">
+        <div class="glass rounded-3xl border border-white/10 p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 float-soft">
+          <div class="flex-1 space-y-3">
+            <h3 class="text-2xl md:text-3xl font-semibold">¿Prefieres una llamada estratégica?</h3>
+            <p class="text-slate-300">Agendamos en menos de 24h. Revisamos tu caso y te recomendamos la activación más rápida.</p>
+            <div class="flex flex-wrap gap-3 text-sm text-slate-300">
+              <span class="chip">Consultoría 1:1</span>
+              <span class="chip">Sin coste</span>
+              <span class="chip">Roadmap en la sesión</span>
+            </div>
+          </div>
+          <a href="https://wesolai.com/consultoria" target="_blank" rel="noreferrer" class="btn-glass-dark px-6 py-3 text-base font-semibold inline-flex items-center gap-2">
+            <i class="ri-calendar-check-line"></i> Agendar llamada
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer id="contacto" class="bg-slate-900/40 border-t border-white/10 py-12 mt-10">
+    <div class="container mx-auto px-5 lg:px-8 space-y-8">
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="space-y-3">
+          <a href="#top" class="inline-flex items-center gap-3 group">
+            <img src="assets/LOGOS/LOGONEGROSOBREBLANCO.png" alt="Logo Solai" class="h-10 w-auto drop-shadow-md rounded">
+            <div class="leading-tight">
+              <div class="text-xl font-bold tracking-tight group-hover:text-white transition-colors">Solvers</div>
+              <div class="text-xs text-slate-300 font-medium group-hover:text-slate-100 transition-colors">by Solai</div>
+            </div>
+          </a>
+          <p class="text-slate-300">Solvers de IA para ventas, soporte, reservas y automatización. Probados en negocio real.</p>
+        </div>
+        <div class="space-y-3">
+          <h3 class="text-xl font-semibold">Contacto</h3>
+          <ul class="space-y-3 text-slate-300">
+            <li class="flex gap-3 items-start"><i class="ri-mail-line"></i> hola@wesolai.com</li>
+            <li class="flex gap-3 items-start"><i class="ri-phone-line"></i> Llámanos al <a href="tel:+34919933075" class="underline">+34 919 93 30 75</a> y prueba nuestro asistente 24/7.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-400">
+        <p>© 2025 Solai Labs LLC. Todos los derechos reservados.</p>
+        <div class="flex items-center gap-6">
+          <a href="https://wesolai.com/aviso-legal" class="hover:text-white transition-colors">Aviso legal</a>
+          <a href="https://wesolai.com/politica-privacidad" class="hover:text-white transition-colors">Política de privacidad</a>
+          <a href="https://wesolai.com/politica-cookies" class="hover:text-white transition-colors">Política de cookies</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const nav = document.getElementById('main-nav');
+    const mobileToggle = document.getElementById('mobile-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const heroParallaxEls = document.querySelectorAll('.parallax-hero');
+
+    // Navbar shrink
+    const handleScroll = () => {
+      if (window.scrollY > 40) nav.classList.add('scrolled');
+      else nav.classList.remove('scrolled');
+    };
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Mobile menu
+    mobileToggle.addEventListener('click', () => {
+      const open = mobileMenu.classList.toggle('hidden') === false;
+      mobileToggle.innerHTML = open ? '<i class="ri-close-line ri-lg"></i>' : '<i class="ri-menu-line ri-lg"></i>';
+      mobileToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    mobileMenu.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+      mobileToggle.innerHTML = '<i class="ri-menu-line ri-lg"></i>';
+      mobileToggle.setAttribute('aria-expanded', 'false');
+    }));
+
+    // Smooth scroll offset
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', e => {
+        const targetId = anchor.getAttribute('href');
+        if (!targetId || targetId === '#') return;
+        const element = document.querySelector(targetId);
+        if (element) {
+          e.preventDefault();
+          const offset = nav.offsetHeight + 12;
+          const top = element.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      });
+    });
+
+    // Reveal on scroll
+    const revealEls = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('opacity-100','translate-y-0');
+          entry.target.classList.remove('opacity-0','translate-y-6');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.14 });
+    revealEls.forEach(el => {
+      el.classList.add('opacity-0','translate-y-6','transition-all','duration-500','ease-out');
+      io.observe(el);
+    });
+
+    // Form animation
+    const formAnimEls = document.querySelectorAll('.form-anim');
+    if (formAnimEls.length) {
+      const ioForm = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in');
+            ioForm.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      formAnimEls.forEach(el => ioForm.observe(el));
+    }
+
+    // Parallax hover
+    const allowParallax = !prefersReduced && window.innerWidth >= 768;
+    if (allowParallax) {
+      document.querySelectorAll('[data-parallax]').forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+          const rect = el.getBoundingClientRect();
+          const x = (e.clientX - rect.left - rect.width / 2) / 18;
+          const y = (e.clientY - rect.top - rect.height / 2) / 18;
+          el.style.transform = `translate(${x}px, ${y}px)`;
+        });
+        el.addEventListener('mouseleave', () => {
+          el.style.transform = 'translate(0,0)';
+        });
+      });
+    }
+
+    // Parallax hero (ligero)
+    if (!prefersReduced && heroParallaxEls.length) {
+      const onScroll = () => {
+        const y = window.scrollY * 0.08;
+        heroParallaxEls.forEach(el => {
+          el.style.transform = `translate3d(0, ${y}px, 0)`;
+        });
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    }
+
+    // Filtro de solvers
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const solverCards = document.querySelectorAll('[data-solver]');
+    const setFilter = (filter) => {
+      filterButtons.forEach(btn => {
+        const active = btn.dataset.filter === filter;
+        btn.classList.toggle('bg-white/10', active);
+        btn.classList.toggle('border-white/30', active);
+        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+      solverCards.forEach(card => {
+        const channels = (card.dataset.channel || '').split(' ');
+        const isMvp = card.dataset.mvp === 'true';
+        const show = filter === 'all'
+          ? true
+          : filter === 'mvp'
+            ? isMvp
+            : channels.includes(filter);
+        if (show) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    };
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => setFilter(btn.dataset.filter));
+    });
+    setFilter('all');
+
+    // Detalles en cards
+    document.querySelectorAll('[data-toggle]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = document.getElementById(btn.dataset.toggle);
+        if (!target) return;
+        const isHidden = target.classList.contains('hidden');
+        target.classList.toggle('hidden');
+        btn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+      });
+    });
+
+    // Solver accordions
+    document.querySelectorAll('[data-toggle]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = document.getElementById(btn.dataset.toggle);
+        if (!target) return;
+        const isHidden = target.classList.contains('hidden');
+        target.classList.toggle('hidden');
+        target.style.maxHeight = isHidden ? target.scrollHeight + 'px' : '';
+        btn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+      });
+    });
+
+    // Toast helper
+    const toastContainer = document.getElementById('toast-container');
+    const showToast = (message, type = 'success') => {
+      if (!toastContainer) return;
+      const el = document.createElement('div');
+      el.className = `toast text-sm px-4 py-3 rounded-xl border shadow-lg ${
+        type === 'success'
+          ? 'border-emerald-400/50 bg-emerald-500/90 text-white'
+          : 'border-pink-400/50 bg-pink-500/90 text-white'
+      }`;
+      el.style.backdropFilter = 'blur(8px)';
+      el.textContent = message;
+      toastContainer.appendChild(el);
+      setTimeout(() => el.remove(), 4500);
+    };
+
+    // Form submission (manteniendo endpoint y campos)
+    const form = document.getElementById('quote-form');
+    if (form) {
+      const submitBtn = form.querySelector('button[type="submit"]');
+      let loading = false;
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (loading) return false;
+        loading = true;
+        const original = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="ri-loader-4-line animate-spin"></i> Enviando...';
+        try {
+          const formData = new FormData(form);
+          const response = await fetch(form.action, {
+            method: 'POST',
+            body: new URLSearchParams(formData),
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+          });
+          if (!response.ok) throw new Error('No se pudo enviar');
+          showToast('Enviado', 'success');
+          form.reset();
+        } catch (err) {
+          console.error(err);
+          showToast('No pudimos enviar ahora. Intenta de nuevo en unos segundos.', 'error');
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = original;
+          loading = false;
+        }
+        return false;
+      });
+    }
+  });
+  </script>
+
+  <!-- ElevenLabs Voice + Chat (bottom-right) -->
+  <elevenlabs-convai agent-id="agent_3201k5vz0p4mf9rsddnw9xe73jzp" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;"></elevenlabs-convai>
+  <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+</body>
+</html>
